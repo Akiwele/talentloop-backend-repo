@@ -17,6 +17,10 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 @Server(
                         description = "LOCAL ENV",
                         url = "http://localhost:8070"
+                ),
+                @Server(
+                        description = "PROD ENV",
+                        url = "https://talentloop-backend.onrender.com"
                 )
         }
 )
