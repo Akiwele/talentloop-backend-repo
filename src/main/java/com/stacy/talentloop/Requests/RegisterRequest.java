@@ -3,8 +3,6 @@ package com.stacy.talentloop.Requests;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-import java.util.List;
-
 public record RegisterRequest(
         @NotBlank(message = "User FullName must be provided")
         String fullName,
@@ -14,10 +12,6 @@ public record RegisterRequest(
         String email,
 
         @NotBlank(message = "User Password must be provided")
-        String password,
-        String availability,
-        String bio,
-        String profileUrl,
-        List<String> skills
+        String password
 ) {
 }

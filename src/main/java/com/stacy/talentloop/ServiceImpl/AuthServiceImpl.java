@@ -5,6 +5,7 @@ import com.stacy.talentloop.Exceptions.EntityAlreadyExists;
 import com.stacy.talentloop.Exceptions.EntityNotFoundException;
 import com.stacy.talentloop.Repository.UserRepository;
 import com.stacy.talentloop.Requests.AuthRequest;
+import com.stacy.talentloop.Requests.CreateProfileRequest;
 import com.stacy.talentloop.Requests.RegisterRequest;
 import com.stacy.talentloop.Response.AuthResponse;
 import com.stacy.talentloop.Security.JwtService;
@@ -54,7 +55,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-
     @Override
     public AuthResponse register(RegisterRequest request) {
         Optional<User> emailExists = userRepository.findByEmail(request.email());
@@ -69,11 +69,7 @@ public class AuthServiceImpl implements AuthService {
                 .fullName(request.fullName())
                 .username(request.username())
                 .email(request.email())
-                .availability(request.availability())
-                .bio(request.bio())
                 .password(passwordEncoder.encode(request.password()))
-                .profileImageUrl(request.profileUrl())
-                .skills(request.skills())
                 .build();
 
         User createdUser = userRepository.save(user);
@@ -86,5 +82,19 @@ public class AuthServiceImpl implements AuthService {
                 createdUser.getProfileImageUrl(),
                 jwtToken
         );
+    }
+
+
+    @Override
+    public void createUserProfile(CreateProfileRequest request, String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not Found"));
+
+        user.setAvailability(request.availability());
+        user.setBio(request.bio());
+        user.setProfileImageUrl(request.profileUrl());
+        user.setSkills(request.skills());
+
+        userRepository.save(user);
     }
 }
