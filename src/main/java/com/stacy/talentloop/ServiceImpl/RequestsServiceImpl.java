@@ -47,7 +47,7 @@ public class RequestsServiceImpl implements RequestService {
         Requests request = Requests.builder()
                 .sender(sender)
                 .receiver(receiver)
-                .message(String.format("%s wants to connect.", sender.getRealUsername()))
+                .message("Wants to connect.")
                 .status(RequestStatus.PENDING)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -66,10 +66,7 @@ public class RequestsServiceImpl implements RequestService {
         }
 
         request.setStatus(RequestStatus.APPROVED);
-        request.setMessage(String.format(
-                "%s approved your request. This is my email: %s",
-                request.getReceiver().getRealUsername(),
-                request.getReceiver().getEmail()));
+        request.setMessage("Approved your request.");
         request.setRespondedAt(LocalDateTime.now());
         var approvedRequest = repository.save(request);
         return mapper.apply(approvedRequest);
