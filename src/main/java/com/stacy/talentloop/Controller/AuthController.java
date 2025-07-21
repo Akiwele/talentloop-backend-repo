@@ -51,9 +51,9 @@ public class AuthController {
             @RequestBody CreateProfileRequest request,
             @RequestParam("userId") String userId
             ){
-        authService.createUserProfile(request, userId);
+        AuthResponse response = authService.createUserProfile(request, userId);
         return  ResponseEntity
                 .status(CREATED)
-                .body(new ApiResponse("User Profile Created Successfully", null));
+                .body(new ApiResponse("User Profile Created Successfully", response));
     }
 }

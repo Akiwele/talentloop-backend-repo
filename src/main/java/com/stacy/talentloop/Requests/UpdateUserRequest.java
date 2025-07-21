@@ -1,16 +1,14 @@
-package com.stacy.talentloop.DTO;
+package com.stacy.talentloop.Requests;
 
 import java.util.List;
 
-public record UserDto(
-        String id,
+public record UpdateUserRequest(
         String username,
         String fullName,
         String email,
         String bio,
         String availability,
         List<String> skills,
-        String profileImageUrl,
-        List<String> likedBy
+        String profileImageUrl
 ) {
 }

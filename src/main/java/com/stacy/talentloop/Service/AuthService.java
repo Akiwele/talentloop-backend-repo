@@ -8,5 +8,5 @@ import com.stacy.talentloop.Response.AuthResponse;
 public interface AuthService {
     AuthResponse authenticate(AuthRequest request);
     AuthResponse register(RegisterRequest request);
-    void createUserProfile(CreateProfileRequest request, String userId);
+    AuthResponse createUserProfile(CreateProfileRequest request, String userId);
 }

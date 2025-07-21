@@ -19,7 +19,8 @@ public class UserMapper implements Function<User, UserDto> {
                 user.getBio(),
                 user.getAvailability(),
                 user.getSkills(),
-                user.getProfileImageUrl()
+                user.getProfileImageUrl(),
+                user.getLikedBy()
         );
     }
 }

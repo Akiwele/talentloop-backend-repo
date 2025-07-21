@@ -35,6 +35,8 @@ public class User implements UserDetails {
     private List<String> skills = new ArrayList<>();
     private String profileImageUrl;
 
+    private List<String> likedBy = new ArrayList<>();
+
     public String getRealUsername(){
         return username;
     }

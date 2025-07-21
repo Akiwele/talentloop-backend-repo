@@ -29,29 +29,33 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse authenticate(AuthRequest request) {
-        Optional<User> user = userRepository.findByEmail(request.email());
-        if(user.isPresent()){
-            User existingUser = user.get();
+        Optional<User> userOptional = userRepository.findByEmail(request.identifier());
+        if (userOptional.isEmpty()) {
+            userOptional = userRepository.findByUsername(request.identifier());
+        }
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
 
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            existingUser.getEmail(),
-                            existingUser.getPassword()
+                            user.getEmail(),
+                            request.password()
                     )
             );
 
-            var jwtToken = jwtService.generateJwtToken(existingUser);
-
+            var jwtToken = jwtService.generateJwtToken(user);
             return new AuthResponse(
-                    existingUser.getId(),
-                    existingUser.getRealUsername(),
-                    existingUser.getFullName(),
-                    existingUser.getEmail(),
-                    existingUser.getProfileImageUrl(),
+                    user.getId(),
+                    user.getRealUsername(),
+                    user.getFullName(),
+                    user.getEmail(),
+                    user.getProfileImageUrl(),
                     jwtToken
             );
         }
-        throw new EntityNotFoundException("User not Found");
+
+        throw new EntityNotFoundException("User not found with provided email or username.");
     }
 
 
@@ -86,15 +90,25 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public void createUserProfile(CreateProfileRequest request, String userId) {
+    public AuthResponse createUserProfile(CreateProfileRequest request, String userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not Found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         user.setAvailability(request.availability());
         user.setBio(request.bio());
         user.setProfileImageUrl(request.profileUrl());
         user.setSkills(request.skills());
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        String jwtToken = jwtService.generateJwtToken(savedUser);
+
+        return new AuthResponse(
+                savedUser.getId(),
+                savedUser.getRealUsername(),
+                savedUser.getFullName(),
+                savedUser.getEmail(),
+                savedUser.getProfileImageUrl(),
+                jwtToken
+        );
     }
 }
