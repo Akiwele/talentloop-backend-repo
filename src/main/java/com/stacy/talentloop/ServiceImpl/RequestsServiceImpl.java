@@ -47,7 +47,7 @@ public class RequestsServiceImpl implements RequestService {
         Requests request = Requests.builder()
                 .sender(sender)
                 .receiver(receiver)
-                .message(String.format("%s wants to connect.", senderId))
+                .message(String.format("%s wants to connect.", sender.getRealUsername()))
                 .status(RequestStatus.PENDING)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -66,6 +66,10 @@ public class RequestsServiceImpl implements RequestService {
         }
 
         request.setStatus(RequestStatus.APPROVED);
+        request.setMessage(String.format(
+                "%s approved your request. This is my email: %s",
+                request.getReceiver().getRealUsername(),
+                request.getReceiver().getEmail()));
         request.setRespondedAt(LocalDateTime.now());
         var approvedRequest = repository.save(request);
         return mapper.apply(approvedRequest);
@@ -82,6 +86,7 @@ public class RequestsServiceImpl implements RequestService {
         }
 
         request.setStatus(RequestStatus.DECLINED);
+        request.setMessage(String.format("%s declined your request", request.getReceiver().getRealUsername()));
         request.setRespondedAt(LocalDateTime.now());
         var declinedRequest = repository.save(request);
         return mapper.apply(declinedRequest);

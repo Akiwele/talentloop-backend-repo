@@ -23,10 +23,10 @@ public class RequestsController {
 
     @PostMapping("/send")
     public ResponseEntity<ApiResponse> sendRequest(
-            @RequestParam("senderId")String senderId,
+            @RequestParam("userId")String userId,
             @RequestParam("receiverId")String receiverId
     ){
-        RequestDto response = requestService.sendRequest(senderId, receiverId);
+        RequestDto response = requestService.sendRequest(userId, receiverId);
         return ResponseEntity
                 .status(CREATED)
                 .body(new ApiResponse("Request sent Successfully", response));
