@@ -1,5 +1,6 @@
 package com.stacy.talentloop.Entity;
 
+import com.stacy.talentloop.DTO.UserRole;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -31,6 +32,7 @@ public class User implements UserDetails {
 
     private String availability;
     private String bio;
+    private UserRole role;
 
     private List<String> skills = new ArrayList<>();
     private String profileImageUrl;
