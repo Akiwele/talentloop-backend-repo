@@ -4,6 +4,7 @@ import com.stacy.talentloop.DTO.UserRole;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,6 +39,9 @@ public class User implements UserDetails {
     private String profileImageUrl;
 
     private List<String> likedBy = new ArrayList<>();
+
+    @DBRef
+    private List<User> connections = new ArrayList<>();
 
     public String getRealUsername(){
         return username;
