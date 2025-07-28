@@ -17,6 +17,7 @@ public record RegisterRequest(
         String password,
 
         UserRole role,
+        String availability,
         String bio,
         String profileUrl,
         List<String> skills
