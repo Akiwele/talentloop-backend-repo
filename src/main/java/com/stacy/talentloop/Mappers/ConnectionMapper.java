@@ -13,7 +13,7 @@ public class ConnectionMapper implements Function<User, ConnectDto> {
         return new ConnectDto(
                 user.getId(),
                 user.getRealUsername(),
-                user.getFullName(),
+                user.getEmail(),
                 user.getProfileImageUrl()
         );
     }

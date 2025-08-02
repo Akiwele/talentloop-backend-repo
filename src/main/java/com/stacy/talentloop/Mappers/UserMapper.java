@@ -28,7 +28,7 @@ public class UserMapper implements Function<User, UserDto> {
                 user.getConnections().stream().map(c -> ConnectDto.builder()
                         .id(c.getId())
                         .username(c.getRealUsername())
-                        .fullName(c.getFullName())
+                        .email(c.getEmail())
                         .profileImageUrl(c.getProfileImageUrl())
                         .build()).toList()
         );
