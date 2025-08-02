@@ -72,4 +72,14 @@ public class RequestsController {
     }
 
 
+    @GetMapping("/approved")
+    public ResponseEntity<ApiResponse> getApprovedRequests(
+            @RequestParam("userId")String userId
+    ){
+        List<RequestDto> response = requestService.getApprovedRequests(userId);
+        return ResponseEntity
+                .status(OK)
+                .body(new ApiResponse("Success", response));
+    }
+
 }

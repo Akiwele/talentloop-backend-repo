@@ -12,4 +12,5 @@ public interface RequestService {
     void updateRequestStatus(String requestId, String receiverId, RequestStatus status);
     List<RequestDto> getAllRequestsForUser(String receiverId);
     List<RequestDto> getRequestsSentByUser(String senderId);
+    List<RequestDto> getApprovedRequests(String senderId);
 }

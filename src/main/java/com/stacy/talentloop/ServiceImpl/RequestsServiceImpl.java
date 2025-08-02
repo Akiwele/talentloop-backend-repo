@@ -140,5 +140,13 @@ public class RequestsServiceImpl implements RequestService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<RequestDto> getApprovedRequests(String userId) {
+        return repository.findBySenderIdAndStatus(userId, RequestStatus.APPROVED)
+                .stream()
+                .map(mapper)
+                .collect(Collectors.toList());
+    }
+
 
 }
