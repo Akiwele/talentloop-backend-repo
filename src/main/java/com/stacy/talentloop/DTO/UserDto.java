@@ -1,6 +1,5 @@
 package com.stacy.talentloop.DTO;
 
-import com.stacy.talentloop.Entity.User;
 
 import java.util.List;
 
@@ -16,6 +15,6 @@ public record UserDto(
         String profileImageUrl,
         List<String> likes,
         List<String> dislikes,
-        List<User> connections
+        List<ConnectDto> connections
 ) {
 }

@@ -1,10 +1,12 @@
 package com.stacy.talentloop.Mappers;
 
+import com.stacy.talentloop.DTO.ConnectDto;
 import com.stacy.talentloop.DTO.UserDto;
 import com.stacy.talentloop.Entity.User;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class UserMapper implements Function<User, UserDto> {
@@ -23,7 +25,12 @@ public class UserMapper implements Function<User, UserDto> {
                 user.getProfileImageUrl(),
                 user.getLikedBy(),
                 user.getDisLikedBy(),
-                user.getConnections()
+                user.getConnections().stream().map(c -> ConnectDto.builder()
+                        .id(c.getId())
+                        .username(c.getRealUsername())
+                        .fullName(c.getFullName())
+                        .profileImageUrl(c.getProfileImageUrl())
+                        .build()).toList()
         );
     }
 }
