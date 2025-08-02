@@ -17,10 +17,13 @@ public class UserMapper implements Function<User, UserDto> {
                 user.getFullName(),
                 user.getEmail(),
                 user.getBio(),
+                user.getRole(),
                 user.getAvailability(),
                 user.getSkills(),
                 user.getProfileImageUrl(),
-                user.getLikedBy()
+                user.getLikedBy(),
+                user.getDisLikedBy(),
+                user.getConnections()
         );
     }
 }

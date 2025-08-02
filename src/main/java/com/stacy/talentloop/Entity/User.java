@@ -39,6 +39,7 @@ public class User implements UserDetails {
     private String profileImageUrl;
 
     private List<String> likedBy = new ArrayList<>();
+    private List<String> disLikedBy = new ArrayList<>();
 
     @DBRef
     private List<User> connections = new ArrayList<>();

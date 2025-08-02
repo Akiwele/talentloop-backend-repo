@@ -1,6 +1,7 @@
 package com.stacy.talentloop.ServiceImpl;
 
 import com.stacy.talentloop.DTO.UserDto;
+import com.stacy.talentloop.DTO.UserRole;
 import com.stacy.talentloop.Entity.User;
 import com.stacy.talentloop.Exceptions.EntityNotFoundException;
 import com.stacy.talentloop.Mappers.UserMapper;
@@ -21,12 +22,13 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public List<UserDto> getUsers() {
-        return userRepository.findAll()
+    public List<UserDto> getUsers(String userId) {
+        return userRepository.findByRoleAndIdNot(UserRole.LEARNANDTEACH, userId)
                 .stream()
                 .map(userMapper)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public UserDto getUser(String userId) {
@@ -50,6 +52,7 @@ public class UserServiceImpl implements UserService {
         updated |= updateIfNotNullAndChanged(request.availability(), user.getAvailability(), user::setAvailability);
         updated |= updateIfNotNullAndChanged(request.skills(), user.getSkills(), user::setSkills);
         updated |= updateIfNotNullAndChanged(request.profileImageUrl(), user.getProfileImageUrl(), user::setProfileImageUrl);
+        updated |= updateIfNotNullAndChanged(request.role(), user.getRole(), user::setRole);
 
         if (updated) {
             user = userRepository.save(user);

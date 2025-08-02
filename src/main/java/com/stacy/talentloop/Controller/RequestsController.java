@@ -1,6 +1,7 @@
 package com.stacy.talentloop.Controller;
 
 import com.stacy.talentloop.DTO.RequestDto;
+import com.stacy.talentloop.DTO.RequestStatus;
 import com.stacy.talentloop.Response.ApiResponse;
 import com.stacy.talentloop.Service.RequestService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -33,28 +34,18 @@ public class RequestsController {
     }
 
 
-    @PatchMapping("/approve")
+    @PatchMapping("/update")
     public ResponseEntity<ApiResponse> approveRequest(
             @RequestParam("requestId")String requestId,
-            @RequestParam("receiverId")String receiverId
-    ){
-        RequestDto response = requestService.approveRequest(requestId, receiverId);
+            @RequestParam("userId")String userId,
+            @RequestParam("status")RequestStatus status
+            ){
+        requestService.updateRequestStatus(requestId, userId,status );
         return ResponseEntity
                 .status(OK)
-                .body(new ApiResponse("Request approved Successfully", response));
+                .body(new ApiResponse("Request updated Successfully", null));
     }
 
-
-    @PatchMapping("/decline")
-    public ResponseEntity<ApiResponse> declineRequest(
-            @RequestParam("senderId")String senderId,
-            @RequestParam("receiverId")String receiverId
-    ){
-        RequestDto response = requestService.declineRequest(senderId, receiverId);
-        return ResponseEntity
-                .status(OK)
-                .body(new ApiResponse("Request declined Successfully", response));
-    }
 
 
     @GetMapping("/")
@@ -68,26 +59,6 @@ public class RequestsController {
     }
 
 
-    @GetMapping("/pending")
-    public ResponseEntity<ApiResponse> getPendingRequests(
-            @RequestParam("userId")String userId
-    ){
-        List<RequestDto> response = requestService.getPendingRequestsForUser(userId);
-        return ResponseEntity
-                .status(OK)
-                .body(new ApiResponse("Success", response));
-    }
-
-
-    @GetMapping("/approved")
-    public ResponseEntity<ApiResponse> getApprovedRequests(
-            @RequestParam("userId")String userId
-    ){
-        List<RequestDto> response = requestService.getApprovedRequestsForUser(userId);
-        return ResponseEntity
-                .status(OK)
-                .body(new ApiResponse("Success", response));
-    }
 
 
     @GetMapping("/sent")

@@ -26,8 +26,10 @@ public class UserController {
     private final UserRepository userRepository;
 
     @GetMapping("/")
-    public ResponseEntity<ApiResponse> getUsers(){
-        List<UserDto> response = userService.getUsers();
+    public ResponseEntity<ApiResponse> getUsers(
+            @RequestParam("userId") String userId
+    ){
+        List<UserDto> response = userService.getUsers(userId);
         return ResponseEntity
                 .status(OK)
                 .body(new ApiResponse("Success", response));

@@ -46,14 +46,4 @@ public class AuthController {
     }
 
 
-    @PatchMapping("/create-profile")
-    public ResponseEntity<ApiResponse> createUserProfile(
-            @RequestBody CreateProfileRequest request,
-            @RequestParam("userId") String userId
-            ){
-        AuthResponse response = authService.createUserProfile(request, userId);
-        return  ResponseEntity
-                .status(CREATED)
-                .body(new ApiResponse("User Profile Created Successfully", response));
-    }
 }

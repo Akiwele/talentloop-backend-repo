@@ -6,7 +6,7 @@ import com.stacy.talentloop.Requests.UpdateUserRequest;
 import java.util.List;
 
 public interface UserService {
-    List<UserDto> getUsers();
+    List<UserDto> getUsers(String userId);
     UserDto getUser(String userId);
     UserDto updateUser(UpdateUserRequest request, String userId);
 }
