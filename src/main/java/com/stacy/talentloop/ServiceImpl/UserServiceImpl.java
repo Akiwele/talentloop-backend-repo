@@ -7,6 +7,8 @@ import com.stacy.talentloop.Exceptions.EntityNotFoundException;
 import com.stacy.talentloop.Mappers.UserMapper;
 import com.stacy.talentloop.Repository.UserRepository;
 import com.stacy.talentloop.Requests.UpdateUserRequest;
+import com.stacy.talentloop.Response.AuthResponse;
+import com.stacy.talentloop.Security.JwtService;
 import com.stacy.talentloop.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final JwtService jwtService;
 
     @Override
     public List<UserDto> getUsers(String userId) {
@@ -40,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserDto updateUser(UpdateUserRequest request, String userId) {
+    public AuthResponse updateUser(UpdateUserRequest request, String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
@@ -57,10 +60,48 @@ public class UserServiceImpl implements UserService {
         if (updated) {
             user = userRepository.save(user);
         }
-
-        return userMapper.apply(user);
+        var token = jwtService.generateJwtToken(user);
+        return new AuthResponse(
+                user.getId(),
+                user.getRealUsername(),
+                user.getFullName(),
+                user.getEmail(),
+                user.getProfileImageUrl(),
+                token
+        );
     }
 
+    @Override
+    public void likeUser(String userId, String instructorId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        User instructor = userRepository.findById(instructorId)
+                .orElseThrow(() -> new RuntimeException("Instructor not found"));
+
+        if (!instructor.getLikedBy().contains(userId)) {
+            instructor.getLikedBy().add(userId);
+            instructor.getDisLikedBy().remove(userId);
+            userRepository.save(instructor);
+        }
+    }
+
+
+    @Override
+    public void disLike(String userId, String instructorId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        User instructor = userRepository.findById(instructorId)
+                .orElseThrow(() -> new RuntimeException("Instructor not found"));
+
+        if (!instructor.getDisLikedBy().contains(userId)) {
+            instructor.getDisLikedBy().add(userId);
+            instructor.getLikedBy().remove(userId);
+            userRepository.save(instructor);
+
+        }
+    }
 
     private <T> boolean updateIfNotNullAndChanged(T newValue, T currentValue, Consumer<T> updater) {
         if (newValue != null && !newValue.equals(currentValue)) {

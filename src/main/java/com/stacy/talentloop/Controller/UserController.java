@@ -5,6 +5,7 @@ import com.stacy.talentloop.Entity.User;
 import com.stacy.talentloop.Repository.UserRepository;
 import com.stacy.talentloop.Requests.UpdateUserRequest;
 import com.stacy.talentloop.Response.ApiResponse;
+import com.stacy.talentloop.Response.AuthResponse;
 import com.stacy.talentloop.Service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +51,7 @@ public class UserController {
             @RequestParam("userId") String userId,
             @RequestBody UpdateUserRequest request
             ){
-        UserDto response = userService.updateUser(request, userId);
+        AuthResponse response = userService.updateUser(request, userId);
         return ResponseEntity
                 .status(OK)
                 .body(new ApiResponse("User Profile Updated successfully", response));
@@ -59,42 +60,24 @@ public class UserController {
 
     @PatchMapping("/like")
     public ResponseEntity<ApiResponse> likeUser(
-            @RequestParam String likerId,
-            @RequestParam String likedUserId
+            @RequestParam("userId") String userId,
+            @RequestParam("instructorId") String instructorId
     ) {
-        Optional<User> likedUserOpt = userRepository.findById(likedUserId);
-        if (likedUserOpt.isEmpty()) {
-            return ResponseEntity.status(404).body(new ApiResponse("User not found", null));
-        }
-
-        User likedUser = likedUserOpt.get();
-        if (!likedUser.getLikedBy().contains(likerId)) {
-            likedUser.getLikedBy().add(likerId);
-            userRepository.save(likedUser);
-        }
-
+        userService.likeUser(userId, instructorId);
         return ResponseEntity
                 .status(OK)
-                .body(new ApiResponse("User liked successfully", likedUser));
+                .body(new ApiResponse("Liked successfully",null));
     }
 
 
     @PatchMapping("/unlike")
-    public ResponseEntity<ApiResponse> unlikeUser(
-            @RequestParam String likerId,
-            @RequestParam String likedUserId
+    public ResponseEntity<ApiResponse> unLikeUser(
+            @RequestParam("userId") String userId,
+            @RequestParam("instructorId") String instructorId
     ) {
-        Optional<User> likedUserOpt = userRepository.findById(likedUserId);
-        if (likedUserOpt.isEmpty()) {
-            return ResponseEntity.status(404).body(new ApiResponse("User not found", null));
-        }
-
-        User likedUser = likedUserOpt.get();
-        likedUser.getLikedBy().removeIf(id -> id.equals(likerId));
-        userRepository.save(likedUser);
-
+        userService.disLike(userId, instructorId);
         return ResponseEntity
                 .status(OK)
-                .body(new ApiResponse("User unliked successfully", likedUser));
+                .body(new ApiResponse("Unliked successfully",null));
     }
 }
