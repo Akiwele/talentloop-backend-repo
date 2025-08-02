@@ -1,9 +1,11 @@
 package com.stacy.talentloop.ServiceImpl;
 
+import com.stacy.talentloop.DTO.ConnectDto;
 import com.stacy.talentloop.DTO.UserDto;
 import com.stacy.talentloop.DTO.UserRole;
 import com.stacy.talentloop.Entity.User;
 import com.stacy.talentloop.Exceptions.EntityNotFoundException;
+import com.stacy.talentloop.Mappers.ConnectionMapper;
 import com.stacy.talentloop.Mappers.UserMapper;
 import com.stacy.talentloop.Repository.UserRepository;
 import com.stacy.talentloop.Requests.UpdateUserRequest;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final ConnectionMapper connectionMapper;
     private final JwtService jwtService;
 
     @Override
@@ -101,6 +104,18 @@ public class UserServiceImpl implements UserService {
             userRepository.save(instructor);
 
         }
+    }
+
+
+    @Override
+    public List<ConnectDto> connections(String userId) {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        return user.getConnections()
+                .stream()
+                .map(connectionMapper)
+                .collect(Collectors.toList());
     }
 
     private <T> boolean updateIfNotNullAndChanged(T newValue, T currentValue, Consumer<T> updater) {

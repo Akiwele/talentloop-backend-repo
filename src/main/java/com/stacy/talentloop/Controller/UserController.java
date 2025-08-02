@@ -1,5 +1,6 @@
 package com.stacy.talentloop.Controller;
 
+import com.stacy.talentloop.DTO.ConnectDto;
 import com.stacy.talentloop.DTO.UserDto;
 import com.stacy.talentloop.Entity.User;
 import com.stacy.talentloop.Repository.UserRepository;
@@ -79,5 +80,16 @@ public class UserController {
         return ResponseEntity
                 .status(OK)
                 .body(new ApiResponse("Unliked successfully",null));
+    }
+
+
+    @GetMapping("/connections")
+    public ResponseEntity<ApiResponse> getUserConnections(
+            @RequestParam("userId") String userId
+    ){
+        List<ConnectDto> response = userService.connections(userId);
+        return ResponseEntity
+                .status(OK)
+                .body(new ApiResponse("Success", response));
     }
 }
